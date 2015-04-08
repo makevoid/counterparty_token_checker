@@ -1,37 +1,23 @@
+#!/usr/bin/env ruby   
+#                      
 # Usage:
 #
 # open words.txt and put there all the words you want to check, separated by space, tab or newline (\n)
 # run ruby counterparty_token_checker.rb
 #
-#
-#
 # note: discards also words that starts with A, that are non-valid custom tokens
 
-output_found = '{"jsonrpc": "2.0", "result": [], "id": 0}'
+require 'counterparty_ruby'
 
-curl = -> (name) do %Q( curl -s -X POST -H "Content-Type: application/json" -H "Cache-Control: no-cache" -d '
-  {
-      "jsonrpc": "2.0",
-      "id": 0,
-      "method": "proxy_to_counterpartyd",
-      "params": {
-          "method": "get_issuances",
-          "params": {
-              "filters": {
-                  "field": "asset",
-                  "op": "==",
-                  "value": "#{name.upcase}"
-              },
-              "status": "valid"
-          }
-      }
-  }' https://cw02.counterwallet.io/_api )
+Counterparty.connection = Counterparty::Connection.new 4000, 'counterparty', '1234', 'xcp-dev.vennd.io'
+
+def curl(name)
+  Counterparty::Issuance.find filters: [ {field: 'asset', op: '==', value: name.upcase} ], status: 'valid'
 end
 
-find = -> (name) do
-  `#{curl.(name)}`.strip == output_found
+def find(name)
+  curl(name).length > 0
 end
-
 
 def load_words
   words = File.read "./words.txt"
@@ -40,11 +26,4 @@ def load_words
   words
 end
 
-words = load_words
-
-for word in words
-  found = find.(word)
-  if found
-    puts "#{word.upcase} found"
-  end
-end
+load_words.each{|word| puts "#{word.upcase} found" if find word }
