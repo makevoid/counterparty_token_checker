@@ -3,6 +3,14 @@
 Checks for available tokens from counterparty API, fill a words.txt wordlist with the token names you want to check!
 
 
+### Install:
+
+```sh
+gem install bundler
+bundle
+```
+
+
 
 ### Usage:
 
@@ -27,7 +35,7 @@ have fun!
 
 --- 
 
-It's all about this curl:
+You can achieve the same result with this curl command:
 
 ```
 curl -s -X POST -H "Content-Type: application/json" -H "Cache-Control: no-cache" -d '
@@ -49,6 +57,8 @@ curl -s -X POST -H "Content-Type: application/json" -H "Cache-Control: no-cache"
   }' https://cw02.counterwallet.io/_api
 ```
 
+
+You can see, in fact, my initial implementation, that was based on this snippet: https://github.com/makevoid/counterparty_token_checker/tree/055939b69b33dbc6b8869431bf3dd93f7a9cfd6f
 
 
 ---
